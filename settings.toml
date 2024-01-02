@@ -1,0 +1,8 @@
+[credentials]
+
+SERVICE_ACCOUNT_FILE = ''
+SHEET_ID = ''
+
+SENDER_EMAIL = ''
+SENDER_PASSWORD = ''
+RECEIVER_EMAIL = ''
