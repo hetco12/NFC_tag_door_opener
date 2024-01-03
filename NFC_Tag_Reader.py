@@ -2,7 +2,8 @@ import toml
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import time
-from pn532 import *
+import serial
+from adafruit_pn532.uart import PN532_UART
 
 # Load settings from TOML file
 config = toml.load('settings.toml')
@@ -13,11 +14,14 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 creds = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-
 service = build('sheets', 'v4', credentials=creds)
 
-# Set up NFC reader
-pn532 = PN532_UART(debug=False, reset=20)
+# Set up NFC reader for UART connection
+# Replace '/dev/ttyUSB0' with the correct serial port if different
+uart = serial.Serial('/dev/ttyUSB0', baudrate=115200, timeout=0.1)
+pn532 = PN532_UART(uart, debug=False)
+
+# Configure PN532 to communicate with MiFare cards
 pn532.SAM_configuration()
 
 # Retry parameters
@@ -52,7 +56,7 @@ while True:
     print(f'Tag with UID {uid} detected')
 
     # Check if tag has been scanned before
-    range_name = 'NFC-tags!A:B'
+    range_name = 'Sheet1!A:B'
     result = service.spreadsheets().values().get(spreadsheetId=SHEET_ID, range=range_name).execute()
     values = result.get('values', [])
     enrolled = ['Y' if row[1] == 'Y' else 'N' for row in values]
@@ -70,3 +74,4 @@ while True:
 
     # Wait a bit before looking for another NFC tag
     time.sleep(1)
+

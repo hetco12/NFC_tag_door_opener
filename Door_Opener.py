@@ -31,7 +31,7 @@ creds = service_account.Credentials.from_service_account_file(
 service = build('sheets', 'v4', credentials=creds)
 
 # Define the Google Sheets document ID for the document you want to work with
-RANGE_NAME = 'NFC-tags!A:B'
+RANGE_NAME = 'Sheet1!A:B'
 LOCAL_VERIFICATION_SHEET = 'local_verification_sheet.csv'
 
 # Set up NFC reader
@@ -179,6 +179,3 @@ while True:
         time.sleep(0.5)  # Adjust this value to control the flashing speed
         set_neopixel_color(BLUE)
         time.sleep(0.5)
-
-
-# ... (remaining code)
