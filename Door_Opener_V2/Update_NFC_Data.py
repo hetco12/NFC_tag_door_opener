@@ -4,8 +4,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SERVICE_ACCOUNT_FILE = '/home/hunter/Downloads/high-runway-383616-2e5c3c1ae944.json'
-
+SERVICE_ACCOUNT_FILE = '
 creds = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 

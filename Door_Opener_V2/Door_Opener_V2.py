@@ -14,9 +14,9 @@ from adafruit_pn532.uart import PN532_UART
 GPIO.setwarnings(False)
 
 # Email configuration (replace with your own email settings)
-SENDER_EMAIL = 'lbadiagnostics@gmail.com'
-SENDER_PASSWORD = 'ubnugpkmpcfrvdwm'
-RECEIVER_EMAIL = 'hunter@leapandbound.net'
+SENDER_EMAIL = ''
+SENDER_PASSWORD = ''
+RECEIVER_EMAIL = ''
 
 # Set up NFC reader
 uart_reader = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=1.0)
