@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import toml
 import serial
 import time
 import RPi.GPIO as GPIO
@@ -13,10 +14,13 @@ from adafruit_pn532.uart import PN532_UART
 # Disable GPIO warnings
 GPIO.setwarnings(False)
 
-# Email configuration (replace with your own email settings)
-SENDER_EMAIL = ''
-SENDER_PASSWORD = ''
-RECEIVER_EMAIL = ''
+# Load settings from TOML file
+config = toml.load('settings.toml')
+SERVICE_ACCOUNT_FILE = config['google_api']['SERVICE_ACCOUNT_FILE']
+SHEET_ID = config['google_api']['SHEET_ID']
+SENDER_EMAIL = config['email']['SENDER_EMAIL']
+SENDER_PASSWORD = config['email']['SENDER_PASSWORD']
+RECEIVER_EMAIL = config['email']['RECEIVER_EMAIL']
 
 # Set up NFC reader
 uart_reader = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=1.0)
@@ -138,6 +142,11 @@ while True:
             nfc_issue_detected = True
             pn532_reset()  # Reset the PN532
         elif 'Response checksum did not match expected value' in str(e):
+            print('Move the tag closer to the NFC reader and try again.')
+            set_neopixel_color(RED)  # Set strip to flash red on NFC communication issues
+            nfc_issue_detected = True
+            pn532_reset()  # Reset the PN532
+        elif 'Response length checksum did not match length!' in str(e):
             print('Move the tag closer to the NFC reader and try again.')
             set_neopixel_color(RED)  # Set strip to flash red on NFC communication issues
             nfc_issue_detected = True
