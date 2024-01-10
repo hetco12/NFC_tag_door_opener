@@ -25,6 +25,12 @@ SENDER_EMAIL = config['email']['SENDER_EMAIL']
 SENDER_PASSWORD = config['email']['SENDER_PASSWORD']
 RECEIVER_EMAIL = config['email']['RECEIVER_EMAIL']
 
+# Define colors
+BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+OFF = (0, 0, 0)  # Off color for NeoPixels
+
 # Function to send an email notification
 def send_email(subject, body):
     try:
@@ -39,7 +45,14 @@ def send_email(subject, body):
 # Function to handle unhandled exceptions and send an email notification
 def handle_exception(exc_type, exc_value, exc_traceback):
     error_message = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+    set_neopixel_color(OFF)  # Turn off NeoPixels
     send_email('Error in Door Opener AI', f'The Door Opener AI encountered an unhandled exception:\n\n{error_message}')
+    sys.exit(1)  # Exit the program with an error code
+
+# Function to set NeoPixel color and display
+def set_neopixel_color(color):
+    pixels.fill(color)
+    pixels.show()
 
 def setup():
     global pn532, pixels, service
@@ -71,16 +84,6 @@ def setup():
     PIXEL_PIN = board.D18
     pixels = neopixel.NeoPixel(PIXEL_PIN, NUM_PIXELS, brightness=0.15, auto_write=False)
 
-    # Define colors
-    BLUE = (0, 0, 255)
-    GREEN = (0, 255, 0)
-    RED = (255, 0, 0)
-
-    # Function to set NeoPixel color and display
-    def set_neopixel_color(color):
-        pixels.fill(color)
-        pixels.show()
-
     # Send email notification on program start and Raspberry Pi reboot
     send_email('Door Opener AI Started', 'The Door Opener AI program has started running.')
 
@@ -99,8 +102,8 @@ def setup():
 
 def main_program():
     # Main program loop
+    set_neopixel_color(BLUE)  # Reset NeoPixels to blue
     print('Waiting for NFC tag...')
-    set_neopixel_color(BLUE)
     nfc_tag_detected = False  # Flag to track if NFC tag was detected
     nfc_issue_detected = False  # Flag to track if there's an NFC issue
 
@@ -136,18 +139,18 @@ def main_program():
                 # Send email notification about the error
                 error_message = f'An error occurred in the NFC Reader:\n\n{str(e)}'
                 send_email('Error in NFC Reader', error_message)
-                raise  # Re-raise other RuntimeError exceptions
+                set_neopixel_color(OFF)  # Turn off NeoPixels
+                sys.exit(1)  # Exit the program with an error code
 
             # Check if there's an NFC issue and reset the strip color after a while
             if nfc_issue_detected:
                 pn532_reset()
                 time.sleep(0.5)
-                set_neopixel_color(BLUE)
+                set_neopixel_color(BLUE)  # Reset NeoPixels to blue
                 nfc_issue_detected = False
 
-    # Add a brief delay before next loop iteration
+    # Add a brief delay before the next loop iteration
     time.sleep(0.1)
-
 
 if __name__ == "__main__":
     setup()
@@ -160,7 +163,5 @@ if __name__ == "__main__":
             detailed_error_message = ''.join(traceback.format_exception(type(e), e, e.__traceback__))
             print(f"Unexpected error: {error_message}")
             send_email('Unexpected Error in Door Opener AI', f'An unexpected error occurred:\n\n{detailed_error_message}')
-            print("Restarting program...")
-            time.sleep(5)  # Wait a bit before restarting
-
-# End of script
+            set_neopixel_color(OFF)  # Turn off NeoPixels
+            sys.exit(1)  # Exit the program with an error code
