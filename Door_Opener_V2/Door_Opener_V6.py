@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import os
-import toml
 import serial
 import time
 import RPi.GPIO as GPIO
@@ -11,27 +9,16 @@ import smtplib
 import sys
 import traceback
 from adafruit_pn532.uart import PN532_UART
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
+import toml
 
 # Disable GPIO warnings
 GPIO.setwarnings(False)
 
 # Load settings from TOML file
 config = toml.load(os.path.join(os.path.dirname(__file__), 'settings.toml'))
-SERVICE_ACCOUNT_FILE = config['google_api']['SERVICE_ACCOUNT_FILE']
-SHEET_ID = config['google_api']['SHEET_ID']
 SENDER_EMAIL = config['email']['SENDER_EMAIL']
 SENDER_PASSWORD = config['email']['SENDER_PASSWORD']
 RECEIVER_EMAIL = config['email']['RECEIVER_EMAIL']
-
-# Set up Google Sheets API
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-creds = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-service = build('sheets', 'v4', credentials=creds)
-RANGE_NAME = 'Sheet1!A:B'
-LOCAL_VERIFICATION_SHEET = 'local_verification_sheet.csv'
 
 # Set up NFC reader
 uart_reader = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=0.1)
@@ -84,17 +71,10 @@ send_email('Door Opener AI Started', 'The Door Opener AI program has started run
 # Set the global exception handler
 sys.excepthook = handle_exception
 
-# Download the Google Sheets document as a local verification sheet
-try:
-    result = service.spreadsheets().values().get(spreadsheetId=SHEET_ID, range=RANGE_NAME).execute()
-    values = result.get('values', [])
-    with open(LOCAL_VERIFICATION_SHEET, 'w') as f:
-        for row in values:
-            f.write(','.join(row) + '\n')
-except Exception as e:
-    print(f'Error downloading Google Sheets: {e}')
+# Define the local verification sheet file path
+LOCAL_VERIFICATION_SHEET = 'local_verification_sheet.csv'
 
-# Main program loop
+# Main program loop for NFC tag detection and door control
 print('Waiting for NFC tag...')
 set_neopixel_color(BLUE)
 nfc_tag_detected = False  # Flag to track if NFC tag was detected
