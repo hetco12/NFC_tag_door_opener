@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+import toml
 import serial
 import time
 import RPi.GPIO as GPIO
@@ -9,7 +11,8 @@ import smtplib
 import sys
 import traceback
 from adafruit_pn532.uart import PN532_UART
-import toml
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 
 # Disable GPIO warnings
 GPIO.setwarnings(False)
@@ -92,7 +95,7 @@ while True:
                 break
             time.sleep(0.5)  # Wait a bit before retrying
         else:
-            print("Failed to read NFC tag after several attempts.")
+            #print("Failed to read NFC tag after several attempts.")
             continue
 
         # NFC tag detected
