@@ -90,7 +90,7 @@ nfc_issue_detected = False  # Flag to track if there's an NFC issue
 while True:
     try:
         for attempt in range(3):  # Try to read the NFC tag up to 3 times
-            uid = pn532.read_passive_target(timeout=0.5)
+            uid = pn532.read_passive_target(timeout=1)
             if uid is not None:
                 break
             time.sleep(0.5)  # Wait a bit before retrying
@@ -172,6 +172,6 @@ while True:
         nfc_issue_detected = False
         continue
     # Add a brief delay before next loop iteration
-    time.sleep(0.15)
+    time.sleep(0.5)
 
 # End of script
