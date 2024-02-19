@@ -18,7 +18,7 @@ service = build('sheets', 'v4', credentials=creds)
 
 # Set up NFC reader for UART connection
 # Replace '/dev/ttyUSB0' with the correct serial port if different
-uart = serial.Serial('/dev/ttyUSB0', baudrate=115200, timeout=0.1)
+uart = serial.Serial('/dev/ttyUSB0', baudrate=115200, timeout=0.5)
 pn532 = PN532_UART(uart, debug=False)
 
 # Configure PN532 to communicate with MiFare cards
@@ -26,7 +26,7 @@ pn532.SAM_configuration()
 
 # Retry parameters
 MAX_RETRIES = 3
-RETRY_DELAY = 0.1
+RETRY_DELAY = 0.3
 
 def read_nfc_tag():
     retries = 0
