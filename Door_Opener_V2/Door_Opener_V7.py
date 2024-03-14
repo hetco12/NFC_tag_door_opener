@@ -136,7 +136,12 @@ while True:
             set_neopixel_color(RED)
             time.sleep(2)
             set_neopixel_color(BLUE)
-
+    # Proceed if uid is not None...
+    except IndexError as e:
+        # Handle the specific 'index out of range' error gracefully
+        print("Encountered an IndexError, possibly due to unexpected NFC data format.")
+        # Consider adding a mechanism to log or further examine the erroneous data
+        continue  # Skip this loop iteration and try reading the tag again
     except RuntimeError as e:
         if 'did not receive expected ACK from PN532' in str(e):
             print('Did not receive expected ACK from NFC tag. Please try again.')
