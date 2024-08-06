@@ -70,11 +70,10 @@ def send_email(subject, body):
 # Function to handle unhandled exceptions and send an email notification
 def handle_exception(exc_type, exc_value, exc_traceback):
     error_message = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
-    send_email('Error in Door Opener AI', f'The Door Opener AI encountered an unhandled exception:\n\n{error_message}')
+    send_email(f'Error in {DOOR_LOCATION} Door Opener AI', f'The {DOOR_LOCATION} Door Opener AI encountered an unhandled exception:\n\n{error_message}')
 
 # Send email notification on program start and Raspberry Pi reboot
-send_email('Door Opener AI Started', 'The Door Opener AI program has started running.')
-
+send_email(f'{DOOR_LOCATION} Door Opener AI Started', f'The {DOOR_LOCATION} Door Opener AI program has started running.')
 # Set the global exception handler
 sys.excepthook = handle_exception
 
