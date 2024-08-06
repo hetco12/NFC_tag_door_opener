@@ -14,3 +14,6 @@ SENDER_PASSWORD = ''
 
 #This is the email address of the recipient
 RECEIVER_EMAIL = ''
+
+[door]
+DOOR_LOCATION
