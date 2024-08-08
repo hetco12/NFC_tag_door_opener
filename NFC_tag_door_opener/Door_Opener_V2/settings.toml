@@ -1,0 +1,20 @@
+
+[google_api]
+#This is copied from the OAth2 credentials in the google cloud console
+SERVICE_ACCOUNT_FILE = "/home/hunter/Downloads/walteria-gate-access-20199cac49aa.json"
+
+#This is inside the URL between the d/ and the /edit, about 40-50 characters cpy it and paste it here.
+SHEET_ID = "1w20jw_8_iqjWnv1M28F5BaoC7W2NUfJZBt5PColQ69k"
+
+[email]
+#This is the email address that will send the emails
+SENDER_EMAIL = "lbadiagnostics@gmail.com"
+
+#This is the password for the email address
+SENDER_PASSWORD = "ubnugpkmpcfrvdwm"
+
+#This is the email address of the recipient
+RECEIVER_EMAIL = "hunter@leapandbound.net"
+
+[door]
+DOOR_LOCATION = "Walteria Front"
