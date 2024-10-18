@@ -11,7 +11,7 @@ creds = service_account.Credentials.from_service_account_file(
 service = build('sheets', 'v4', credentials=creds)
 
 # Define the Google Sheets document ID for the document you want to work with
-SHEET_ID = '1EEklwyvde3Hh2Sr20asr0FuGxk4z1UmkTtgr_8Ruvjo'
+SHEET_ID = ''
 RANGE_NAME = 'NFC-tags!A:B'
 LOCAL_VERIFICATION_SHEET = 'local_verification_sheet.csv'
 
