@@ -10,6 +10,7 @@ config = toml.load('settings.toml')
 SERVICE_ACCOUNT_FILE = config['google_api']['SERVICE_ACCOUNT_FILE']
 SHEET_ID = config['google_api']['SHEET_ID']
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+RANGE = config['google_api']['RANGE']
 
 # Google Sheets API setup
 creds = service_account.Credentials.from_service_account_file(
@@ -43,7 +44,7 @@ def find_row_by_uid(uid, values):
     return None
 
 def update_user_info(sheet_id, uid):
-    range_name = 'Sheet1!A:E'
+    range_name = '(RANGE)!A:E'
     result = service.spreadsheets().values().get(spreadsheetId=sheet_id, range=range_name).execute()
     values = result.get('values', [])
     

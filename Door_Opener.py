@@ -23,6 +23,7 @@ SHEET_ID = config['google_api']['SHEET_ID']
 SENDER_EMAIL = config['email']['SENDER_EMAIL']
 SENDER_PASSWORD = config['email']['SENDER_PASSWORD']
 RECEIVER_EMAIL = config['email']['RECEIVER_EMAIL']
+RANGE = config['google_api']['RANGE']
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 creds = service_account.Credentials.from_service_account_file(
@@ -31,7 +32,7 @@ creds = service_account.Credentials.from_service_account_file(
 service = build('sheets', 'v4', credentials=creds)
 
 # Define the Google Sheets document ID for the document you want to work with
-RANGE_NAME = 'Sheet1!A:B'
+RANGE_NAME = (RANGE)'!A:B'
 LOCAL_VERIFICATION_SHEET = 'local_verification_sheet.csv'
 
 # Set up NFC reader
